@@ -1,54 +1,3 @@
-<script lang="ts" setup>
-import pizza from "./assets/products/categories/pizza.png";
-import sushi from "./assets/products/categories/sushi.png";
-import rolls from "./assets/products/categories/rolle.png";
-import set from "./assets/products/categories/set.png";
-import wok from "./assets/products/categories/wok.png";
-import soup from "./assets/products/categories/soup.png";
-import salad from "./assets/products/categories/salads.png";
-import dessert from "./assets/products/categories/dessert.png";
-import drink from "./assets/products/categories/drink.png";
-import sale from "./assets/products/categories/sale.png";
-
-
-interface IHeaderNavigationPoint {
-  label: string;
-  link: string;
-  imageLink?: string;
-}
-const headerNavigationPoints: IHeaderNavigationPoint[] = [
-  {label: 'О нас', link: '/about'},
-  {label: 'Доставка и оплата', link: '/delivery_and_payment'},
-  {label: 'Контакты', link: '/contacts'},
-  {label: 'Бонусы', link: '/bonuses'},
-  {label: 'Вакансии', link: '/vacancies'}
-]
-
-const headerNavigationProductCategories: IHeaderNavigationPoint[] = [
-  {label: 'Пицца', link: '/products/pizza', imageLink: pizza},
-  {label: 'Суши', link: '/products/sushi', imageLink: sushi},
-  {label: 'Роллы', link: '/products/rolls', imageLink: rolls},
-  {label: 'Сеты', link: '/products/sets', imageLink: set},
-  {label: 'Wok', link: '/products/wok', imageLink: wok},
-  {label: 'Супы', link: '/products/soup', imageLink: soup},
-  {label: 'Салаты', link: '/products/salads', imageLink: salad},
-  {label: 'Десерты', link: '/products/desserts', imageLink: dessert},
-  {label: 'Напитки', link: '/products/drinks', imageLink: drink},
-  {label: 'Акции', link: '/products/discounts', imageLink: sale}
-]
-
-const footerNavigationProductCategories = headerNavigationProductCategories.map((category) => ({
-  label: category.label,
-  link: category.link
-}))
-
-const footerNavigationPoints: IHeaderNavigationPoint[] = [
-  {label: 'О нас', link: '/about'},
-  {label: 'Доставка и оплата', link: '/delivery_and_payment'},
-  {label: 'Контакты', link: '/contacts'}
-]
-</script>
-
 <template>
   <div>
     <header>
@@ -97,7 +46,7 @@ const footerNavigationPoints: IHeaderNavigationPoint[] = [
         </ul>
       </div>
     </header>
-
+      <RouterView />
     <footer class="footer">
       <div class="max-w-[1224px] flex items-center mx-auto">
         <img src="./assets/logo_white.png" class="-mt-[39px]">
@@ -133,6 +82,57 @@ const footerNavigationPoints: IHeaderNavigationPoint[] = [
   </div>
 </template>
 
+<script lang="ts" setup>
+import pizza from "./assets/products/categories/pizza.png";
+import sushi from "./assets/products/categories/sushi.png";
+import rolls from "./assets/products/categories/rolle.png";
+import set from "./assets/products/categories/set.png";
+import wok from "./assets/products/categories/wok.png";
+import soup from "./assets/products/categories/soup.png";
+import salad from "./assets/products/categories/salads.png";
+import dessert from "./assets/products/categories/dessert.png";
+import drink from "./assets/products/categories/drink.png";
+import sale from "./assets/products/categories/sale.png";
+import { RouterView } from "vue-router";
+
+
+interface IHeaderNavigationPoint {
+  label: string;
+  link: string;
+  imageLink?: string;
+}
+const headerNavigationPoints: IHeaderNavigationPoint[] = [
+  {label: 'О нас', link: '/about'},
+  {label: 'Доставка и оплата', link: '/delivery_and_payment'},
+  {label: 'Контакты', link: '/contacts'},
+  {label: 'Бонусы', link: '/bonuses'},
+  {label: 'Вакансии', link: '/vacancies'}
+]
+
+const headerNavigationProductCategories: IHeaderNavigationPoint[] = [
+  {label: 'Пицца', link: '/products/pizza', imageLink: pizza},
+  {label: 'Суши', link: '/products/sushi', imageLink: sushi},
+  {label: 'Роллы', link: '/products/rolls', imageLink: rolls},
+  {label: 'Сеты', link: '/products/sets', imageLink: set},
+  {label: 'Wok', link: '/products/wok', imageLink: wok},
+  {label: 'Супы', link: '/products/soup', imageLink: soup},
+  {label: 'Салаты', link: '/products/salads', imageLink: salad},
+  {label: 'Десерты', link: '/products/desserts', imageLink: dessert},
+  {label: 'Напитки', link: '/products/drinks', imageLink: drink},
+  {label: 'Акции', link: '/products/discounts', imageLink: sale}
+]
+
+const footerNavigationProductCategories = headerNavigationProductCategories.map((category) => ({
+  label: category.label,
+  link: category.link
+}))
+
+const footerNavigationPoints: IHeaderNavigationPoint[] = [
+  {label: 'О нас', link: '/about'},
+  {label: 'Доставка и оплата', link: '/delivery_and_payment'},
+  {label: 'Контакты', link: '/contacts'}
+]
+</script>
 
 <style lang="scss">
   #root {
@@ -142,6 +142,7 @@ const footerNavigationPoints: IHeaderNavigationPoint[] = [
 
 <style lang="scss">
 @import "./styles/_variables";
+@import "./styles/_main";
 
 .footer {
   @apply mt-[6148px] h-[182px];
