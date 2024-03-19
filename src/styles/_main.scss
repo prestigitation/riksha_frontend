@@ -3,3 +3,12 @@
         @apply max-w-[1224px] mx-auto;
     }
 }
+
+.text {
+    &__primary {
+        color: $primary-color;
+    }
+    &__secondary {
+        color: $secondary-color;
+    }
+}
