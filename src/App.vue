@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div ref="body">
     <header>
       <div class="max-w-[1224px] min-h-[89px] flex items-center mx-auto">
         <a href="/" class="contents">

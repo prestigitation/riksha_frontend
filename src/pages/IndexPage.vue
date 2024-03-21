@@ -1,5 +1,11 @@
 <template>
   <div class="mt-10 page__container">
+    <Button @click="scrollToStart" :class="['h-[132px] w-[132px] bg-cover flex-col fixed top-[50%] right-[5.85%]', {
+      'opacity-50': scrollPosition < SCROLL_MIN_VALUE
+    }]">
+      <div class="flex justify-center"><img src="../assets/arr_up.png"></div>
+      <div id="page__button--up" class="mt-[2px] ml-[1px]">Наверх</div>
+    </Button>
     <Slider />
     <div><img class="absolute left-0 -mt-20" src="../assets/bg _clock.png"></div>
     <div class="mt-10 flex justify-between">
@@ -32,12 +38,44 @@
 </template>
 
 <script setup lang="ts">
+import { computed, inject, onMounted, onUnmounted, ref } from 'vue';
+import Button from '../components/button/Button.vue';
 import Slider from '../components/slider/Slider.vue';
 
+const SCROLL_MIN_VALUE = 90
 
+const scrollPosition = ref(0)
+
+onMounted(() => {
+  window.addEventListener("scroll", handleScroll)
+})
+
+onUnmounted(() => {
+  window.removeEventListener("scroll", handleScroll)
+})
+
+function handleScroll() {
+  scrollPosition.value = window.scrollY
+}
+
+function scrollToStart() {
+  if(window.scrollY > SCROLL_MIN_VALUE) {
+    window.scrollTo(0, 0)
+  }
+}
 </script>
 
 <style lang="scss" scoped>
+  .page {
+    &__button {
+      &--up {
+        font-family: TT Interfaces;
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 22.5px;
+      }
+    }
+  }
   .advantage {
     &__card {
       &--header {
