@@ -37,10 +37,10 @@
       </div>
       <div class="header__products--container">
         <ul class="header__list header__products--list">
-          <li class="header__list--item" style="width: 64px" v-for="(item, i) in headerNavigationProductCategories" :key="i">
-            <a class="flex flex-col justify-center items-center" :href="item.link">
-              <img class="w-8 h-8" v-if="item.imageLink" :src="item.imageLink">
-              <span class="header__products--item">{{ item.label }}</span>
+          <li class="header__list--item" style="width: 64px" v-for="(item, i) in categories" :key="i">
+            <a class="flex flex-col justify-center items-center" :href="'products/' + item.slug">
+              <img class="w-8 h-8" v-if="item.image" :src="apiUrl + item.image">
+              <span class="header__products--item">{{ item.title }}</span>
             </a>
           </li>
         </ul>
@@ -64,8 +64,8 @@
         </div>
         <div class="pl-[91px]">
             <ul class="grid grid-cols-5 gap-[21px] mt-[34px]">
-              <li class="header__list--item" v-for="(item, i) in footerNavigationProductCategories" :key="i">
-                <a :href="item.link">{{ item.label }}</a>
+              <li class="header__list--item" v-for="(item, i) in footerCategories" :key="i">
+                <a :href="'products/' + item.slug">{{ item.title }}</a>
               </li>
             </ul>
         </div>
@@ -83,18 +83,34 @@
 </template>
 
 <script lang="ts" setup>
-import pizza from "./assets/products/categories/pizza.png";
-import sushi from "./assets/products/categories/sushi.png";
-import rolls from "./assets/products/categories/rolle.png";
-import set from "./assets/products/categories/set.png";
-import wok from "./assets/products/categories/wok.png";
-import soup from "./assets/products/categories/soup.png";
-import salad from "./assets/products/categories/salads.png";
-import dessert from "./assets/products/categories/dessert.png";
-import drink from "./assets/products/categories/drink.png";
-import sale from "./assets/products/categories/sale.png";
 import { RouterView } from "vue-router";
+import { onBeforeMount, onMounted, reactive, ref } from "vue";
+import { useInstance } from "./composables/useAxios";
+import { AxiosResponse } from "axios";
 
+interface Category {
+  title: string;
+  slug: string;
+  image: string;
+}
+
+const apiUrl = import.meta.env.VITE_API_URL;
+const axios = useInstance();
+
+let categories = ref<Category[]>([]);
+let footerCategories = ref<Omit<Category, 'image'>[]>([]);
+
+onMounted(async () => {
+  await axios.get("category").then((response: AxiosResponse) => {
+    if(response.data) {
+      categories.value = response.data
+      footerCategories.value = response.data.map((category: Category) => ({
+        title: category.title,
+        slug: category.slug
+      }))
+    }
+  })
+})
 
 interface IHeaderNavigationPoint {
   label: string;
@@ -108,24 +124,6 @@ const headerNavigationPoints: IHeaderNavigationPoint[] = [
   {label: 'Бонусы', link: '/bonuses'},
   {label: 'Вакансии', link: '/vacancies'}
 ]
-
-const headerNavigationProductCategories: IHeaderNavigationPoint[] = [
-  {label: 'Пицца', link: '/products/pizza', imageLink: pizza},
-  {label: 'Суши', link: '/products/sushi', imageLink: sushi},
-  {label: 'Роллы', link: '/products/rolls', imageLink: rolls},
-  {label: 'Сеты', link: '/products/sets', imageLink: set},
-  {label: 'Wok', link: '/products/wok', imageLink: wok},
-  {label: 'Супы', link: '/products/soup', imageLink: soup},
-  {label: 'Салаты', link: '/products/salads', imageLink: salad},
-  {label: 'Десерты', link: '/products/desserts', imageLink: dessert},
-  {label: 'Напитки', link: '/products/drinks', imageLink: drink},
-  {label: 'Акции', link: '/products/discounts', imageLink: sale}
-]
-
-const footerNavigationProductCategories = headerNavigationProductCategories.map((category) => ({
-  label: category.label,
-  link: category.link
-}))
 
 const footerNavigationPoints: IHeaderNavigationPoint[] = [
   {label: 'О нас', link: '/about'},
