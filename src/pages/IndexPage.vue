@@ -15,7 +15,7 @@
         <h6 class="advantage__card--header mt-[13.5px] ml-[5.5px]">доставка</h6>
         <div class="advantage__card--text mt-[2px] ml-2">при заказе от 600 ₽</div>
       </div>
-      <div class="flex flex-col items-center pl-[2px]">
+      <div class="flex flex-col items-center pl-[3px]">
         <img class="mt-8 -ml-[14px]" src="../assets/advantages_2.png" alt="Доставим">
         <img class="-mt-[9px]" src="../assets/advantages_image_2.png">
         <h6 class="advantage__card--header mt-[14px] -ml-[15px]">за 60 мин</h6>
@@ -34,20 +34,54 @@
         <div class="advantage__card--text mt-[2px] -ml-[29px]">Никаких заготовок!</div>
       </div>
     </div>
+    <div>
+      <div class="relative">
+        <img class="absolute -left-[82px] -top-[42px]" src="../assets/roll_promo.png">
+      </div>
+      <ul class="flex mt-[147px] -ml-[3.5px] gap-8" v-if="labels.length">
+        <li @click="setLabel(index)" :class="['text__header--active', {'text__header--inactive': index !== activeLabel}]" v-for="label, index in labels" :key="label.id">{{ label.name }}</li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { AxiosResponse } from 'axios';
 import { computed, inject, onMounted, onUnmounted, ref } from 'vue';
 import Button from '../components/button/Button.vue';
 import Slider from '../components/slider/Slider.vue';
+import { useInstance } from '../composables/useAxios';
+
+interface ILabel {
+  id: number;
+  name: string;
+  title: string;
+}
+
+const axios = useInstance();
 
 const SCROLL_MIN_VALUE = 90
 
 const scrollPosition = ref(0)
+const labels = ref<ILabel[]>([]);
+const productsByLabel = ref([]);
 
-onMounted(() => {
+const activeLabel = ref(0);
+
+function setLabel(index: number) {
+  activeLabel.value = index;
+}
+
+onMounted(async () => {
   window.addEventListener("scroll", handleScroll)
+  await axios.get("label").then(async (response: AxiosResponse) => {
+    if(response.data) {
+      labels.value = response.data
+      await axios.get("product?label=" + labels.value[activeLabel.value].title).then((response: AxiosResponse) => {
+        productsByLabel.value = response.data
+      })
+    }
+  })
 })
 
 onUnmounted(() => {

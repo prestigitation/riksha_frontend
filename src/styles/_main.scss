@@ -5,6 +5,20 @@
 }
 
 .text {
+    &__header {
+        &--active {
+            font-family: TT Interfaces;
+            font-size: 48px;
+            font-weight: bolder;
+            line-height: 60px;
+        }
+        &--inactive {
+            color: #B7B7B7;
+        }
+        &--active, &--inactive {
+            @apply hover:cursor-pointer;
+        }
+    }
     &__primary {
         color: $primary-color;
     }
