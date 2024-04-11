@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-10 page__container">
+  <div class="pt-10 page__container">
     <Button @click="scrollToStart" :class="['h-[132px] w-[132px] bg-cover flex-col fixed top-[50%] right-[5.85%]', {
       'opacity-50': scrollPosition < SCROLL_MIN_VALUE
     }]">
@@ -41,16 +41,20 @@
       <ul class="flex mt-[147px] -ml-[3.5px] gap-8" v-if="labels.length">
         <li @click="setLabel(index)" :class="['text__header--active', {'text__header--inactive': index !== activeLabel}]" v-for="label, index in labels" :key="label.id">{{ label.name }}</li>
       </ul>
+      <div class="grid grid-cols-3 gap-[24px]" v-if="productsByLabel.length">
+        <ProductCard v-for="product, i in productsByLabel" :key="i" :product="product" />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { AxiosResponse } from 'axios';
-import { computed, inject, onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import Button from '../components/button/Button.vue';
 import Slider from '../components/slider/Slider.vue';
 import { useInstance } from '../composables/useAxios';
+import ProductCard from '../components/product_card/ProductCard.vue';
 
 interface ILabel {
   id: number;
@@ -68,8 +72,15 @@ const productsByLabel = ref([]);
 
 const activeLabel = ref(0);
 
-function setLabel(index: number) {
+async function setLabel(index: number) {
   activeLabel.value = index;
+  await getProductsByLabel();
+}
+
+async function getProductsByLabel() {
+  await axios.get("product?label=" + labels.value[activeLabel.value].title + "&sortBy=id:ASC&sortBy=tags.id:ASC&sortBy=ingredients.id:ASC").then((response: AxiosResponse) => {
+    productsByLabel.value = response.data.data
+  })
 }
 
 onMounted(async () => {
@@ -77,9 +88,7 @@ onMounted(async () => {
   await axios.get("label").then(async (response: AxiosResponse) => {
     if(response.data) {
       labels.value = response.data
-      await axios.get("product?label=" + labels.value[activeLabel.value].title).then((response: AxiosResponse) => {
-        productsByLabel.value = response.data
-      })
+      await getProductsByLabel();
     }
   })
 })

@@ -46,7 +46,9 @@
         </ul>
       </div>
     </header>
+    <div class="body">
       <RouterView />
+    </div>
     <footer class="footer">
       <div class="max-w-[1224px] flex items-center mx-auto">
         <img src="./assets/logo_white.png" class="-mt-[39px]">
@@ -141,6 +143,25 @@ const footerNavigationPoints: IHeaderNavigationPoint[] = [
 <style lang="scss">
 @import "./styles/_variables";
 @import "./styles/_main";
+
+.body {
+  position: relative;
+}
+
+.body:before {
+  content: ' ';
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 20%;
+  background-image: url("./assets/bg.jpg");
+  background-repeat: no-repeat;
+  background-position: 50% 0;
+  background-size: cover;
+}
 
 .footer {
   @apply mt-[6148px] h-[182px];
